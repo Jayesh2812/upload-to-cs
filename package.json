@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "release": "ncc build src/upload-report.ts && git add dist/",
+    "release": "ncc build src/index.ts && git add dist/",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint **/*.ts",

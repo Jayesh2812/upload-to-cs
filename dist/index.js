@@ -6240,6 +6240,7 @@ function run() {
                 parentUid,
                 filepath
             });
+            console.log(link);
             if (link)
                 core.setOutput('link', link);
             else if (error) {
@@ -10397,9 +10398,16 @@ module.exports = JSON.parse('{"application/1d-interleaved-parityfec":{"source":"
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
-/******/ 
-/******/ // startup
-/******/ // Load entry module and return exports
-/******/ // This entry module is referenced by other modules so it can't be inlined
-/******/ var __webpack_exports__ = __nccwpck_require__(5447);
-/******/ 
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "X", ({ value: true }));
+const upload_report_1 = __nccwpck_require__(5447);
+(0, upload_report_1.run)();
+
+})();
+
+var __webpack_exports___esModule = __webpack_exports__.X;
+export { __webpack_exports___esModule as __esModule };

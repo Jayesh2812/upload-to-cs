@@ -16,7 +16,7 @@ export async function run(): Promise<void> {
       parentUid,
       filepath
     })
-
+    console.log(link)
     if (link) core.setOutput('link', link)
     else if (error) {
       if (error.response) throw Error(error.response.data.error_message)
