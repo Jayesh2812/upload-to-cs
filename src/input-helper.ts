@@ -19,7 +19,7 @@ export function getInputs() {
 
   const filename = 'index.html'
 
-  const filepath = path.join(__dirname, folderPath, filename)
+  const filepath = path.join(folderPath, filename)
 
   const inputs = {
     managementToken,

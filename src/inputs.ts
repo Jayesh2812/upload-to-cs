@@ -1,5 +1,4 @@
 export enum Inputs {
-  Name = 'name',
   Path = 'path',
   ManagementToken = 'management_token',
   ApiKey = 'api_key',

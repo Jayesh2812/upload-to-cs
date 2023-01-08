@@ -1,4 +1,4 @@
-import core from '@actions/core'
+import * as core from '@actions/core'
 import FormData from 'form-data'
 import fs from 'fs'
 import axios from 'axios'
@@ -6,20 +6,26 @@ import axios from 'axios'
 import { getInputs } from './input-helper'
 import { UploadInputs } from './inputs'
 
-// TODO: Add region support
-// TODO: Add test cases.
-// API apiKey
-// MANAGEMENT TOKEN
-// parent folder uid
-// region
+export async function run(): Promise<void> {
+  try {
+    const { managementToken, apiKey, parentUid, filepath } = getInputs()
 
-try {
-  const { managementToken, apiKey, parentUid, filepath } = getInputs()
-  postReport({ managementToken, apiKey, parentUid, filepath })
-} catch (error) {
-  core.setFailed((error as Error).message)
+    const [link, error] = await postReport({
+      managementToken,
+      apiKey,
+      parentUid,
+      filepath
+    })
+
+    if (link) core.setOutput('link', link)
+    else if (error) {
+      if (error.response) throw Error(error.response.data.error_message)
+      throw Error(error)
+    }
+  } catch (error: any) {
+    core.setFailed((error as Error).message)
+  }
 }
-
 async function postReport({
   managementToken,
   apiKey,
@@ -27,6 +33,7 @@ async function postReport({
   filepath
 }: UploadInputs) {
   var data = new FormData()
+
   data.append('asset[upload]', fs.createReadStream(filepath))
   data.append('asset[parent_uid]', parentUid)
 
@@ -41,14 +48,11 @@ async function postReport({
     },
     data: data
   }
-
-  axios(config)
-    .then(function (response) {
-      const url = response.data.asset.url
-      core.setOutput('link', url)
-    })
-    .catch(function (error) {
-      core.setFailed(error.response.data)
-      console.log(error.response.data)
-    })
+  try {
+    const response = await axios(config)
+    const { url } = response.data.asset
+    return [url, null]
+  } catch (error: any) {
+    return [null, error]
+  }
 }
