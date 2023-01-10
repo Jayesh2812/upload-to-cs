@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import path from 'path'
 import { Inputs, UploadInputs } from './inputs'
 
 export function getInputs() {
@@ -11,21 +10,20 @@ export function getInputs() {
     required: true
   })
 
-  const folderPath = core.getInput(Inputs.Path, {
+  const filePath = core.getInput(Inputs.FilePath, {
     required: true
   })
 
-  const parentUid = core.getInput(Inputs.ParentFolderUid)
+  const folderUid = core.getInput(Inputs.FolderUid)
 
-  const filename = 'index.html'
-
-  const filepath = path.join(folderPath, filename)
+  const hostUrl = core.getInput(Inputs.HostUrl)
 
   const inputs = {
     managementToken,
     apiKey,
-    parentUid,
-    filepath
+    folderUid,
+    filePath,
+    hostUrl
   } as UploadInputs
 
   return inputs

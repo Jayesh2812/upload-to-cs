@@ -1,3 +1,3 @@
-import { run } from './upload-report'
+import { run } from './upload-file'
 
 run()

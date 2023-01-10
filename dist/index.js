@@ -6133,13 +6133,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getInputs = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const path_1 = __importDefault(__nccwpck_require__(1017));
 const inputs_1 = __nccwpck_require__(7063);
 function getInputs() {
     const managementToken = core.getInput(inputs_1.Inputs.ManagementToken, {
@@ -6148,17 +6144,17 @@ function getInputs() {
     const apiKey = core.getInput(inputs_1.Inputs.ApiKey, {
         required: true
     });
-    const folderPath = core.getInput(inputs_1.Inputs.Path, {
+    const filePath = core.getInput(inputs_1.Inputs.FilePath, {
         required: true
     });
-    const parentUid = core.getInput(inputs_1.Inputs.ParentFolderUid);
-    const filename = 'index.html';
-    const filepath = path_1.default.join(folderPath, filename);
+    const folderUid = core.getInput(inputs_1.Inputs.FolderUid);
+    const hostUrl = core.getInput(inputs_1.Inputs.HostUrl);
     const inputs = {
         managementToken,
         apiKey,
-        parentUid,
-        filepath
+        folderUid,
+        filePath,
+        hostUrl
     };
     return inputs;
 }
@@ -6175,16 +6171,17 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Inputs = void 0;
 var Inputs;
 (function (Inputs) {
-    Inputs["Path"] = "path";
+    Inputs["FilePath"] = "file_path";
     Inputs["ManagementToken"] = "management_token";
     Inputs["ApiKey"] = "api_key";
-    Inputs["ParentFolderUid"] = "parent_folder_uid";
+    Inputs["FolderUid"] = "folder_uid";
+    Inputs["HostUrl"] = "host_url";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 
 
 /***/ }),
 
-/***/ 5447:
+/***/ 622:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -6231,21 +6228,24 @@ const fs_1 = __importDefault(__nccwpck_require__(7147));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const input_helper_1 = __nccwpck_require__(6455);
 function run() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { managementToken, apiKey, parentUid, filepath } = (0, input_helper_1.getInputs)();
+            const { managementToken, apiKey, folderUid, filePath, hostUrl } = (0, input_helper_1.getInputs)();
             const [link, error] = yield postReport({
                 managementToken,
                 apiKey,
-                parentUid,
-                filepath
+                folderUid,
+                filePath,
+                hostUrl
             });
-            console.log(link);
             if (link)
                 core.setOutput('link', link);
             else if (error) {
-                if (error.response)
+                core.debug(JSON.stringify(error));
+                if ((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.error_message) {
                     throw Error(error.response.data.error_message);
+                }
                 throw Error(error);
             }
         }
@@ -6255,14 +6255,14 @@ function run() {
     });
 }
 exports.run = run;
-function postReport({ managementToken, apiKey, parentUid, filepath }) {
+function postReport({ managementToken, apiKey, folderUid, filePath, hostUrl }) {
     return __awaiter(this, void 0, void 0, function* () {
         var data = new form_data_1.default();
-        data.append('asset[upload]', fs_1.default.createReadStream(filepath));
-        data.append('asset[parent_uid]', parentUid);
+        data.append('asset[upload]', fs_1.default.createReadStream(filePath));
+        data.append('asset[parent_uid]', folderUid);
         var config = {
             method: 'post',
-            url: 'https://api.contentstack.io/v3/assets',
+            url: hostUrl,
             headers: Object.assign({ api_key: apiKey, authorization: managementToken, 'Content-Type': 'multipart/form-data' }, data.getHeaders()),
             data: data
         };
@@ -10404,8 +10404,8 @@ var __webpack_exports__ = {};
 var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "X", ({ value: true }));
-const upload_report_1 = __nccwpck_require__(5447);
-(0, upload_report_1.run)();
+const upload_file_1 = __nccwpck_require__(622);
+(0, upload_file_1.run)();
 
 })();
 

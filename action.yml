@@ -1,8 +1,8 @@
-name: 'Upload report to ContentStack'
-description: 'Upload the index.html of a test report at provided path to ContentStack'
+name: 'Upload file to ContentStack'
+description: 'Upload file at provided path to ContentStack Assets'
 inputs:
-  path: 
-    description: Path to test folder containing index.html
+  file_path: 
+    description: Path of the file to upload
     required: true
 
   management_token:
@@ -10,14 +10,18 @@ inputs:
     required: true
 
   api_key:
-    description: 'Api Key'
+    description: 'Stack Api Key'
     required: true
 
-  parent_folder_uid:
-    description: "Folder UID"
+  folder_uid:
+    description: 'Folder Uid under which file is to be uploaded in ContentStack Assets'
     required: false
     default: null
 
+  host_url:
+    description: 'Region based URL for where to upload the file'
+    required: false
+    default: https://api.contentstack.io/v3/assets
     
 outputs:
   link:

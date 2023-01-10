@@ -8,18 +8,22 @@ import { UploadInputs } from './inputs'
 
 export async function run(): Promise<void> {
   try {
-    const { managementToken, apiKey, parentUid, filepath } = getInputs()
+    const { managementToken, apiKey, folderUid, filePath, hostUrl } =
+      getInputs()
 
     const [link, error] = await postReport({
       managementToken,
       apiKey,
-      parentUid,
-      filepath
+      folderUid,
+      filePath,
+      hostUrl
     })
-    console.log(link)
     if (link) core.setOutput('link', link)
     else if (error) {
-      if (error.response) throw Error(error.response.data.error_message)
+      core.debug(JSON.stringify(error))
+      if (error?.response?.data?.error_message) {
+        throw Error(error.response.data.error_message)
+      }
       throw Error(error)
     }
   } catch (error: any) {
@@ -29,17 +33,18 @@ export async function run(): Promise<void> {
 async function postReport({
   managementToken,
   apiKey,
-  parentUid,
-  filepath
+  folderUid,
+  filePath,
+  hostUrl
 }: UploadInputs) {
   var data = new FormData()
 
-  data.append('asset[upload]', fs.createReadStream(filepath))
-  data.append('asset[parent_uid]', parentUid)
+  data.append('asset[upload]', fs.createReadStream(filePath))
+  data.append('asset[parent_uid]', folderUid)
 
   var config = {
     method: 'post',
-    url: 'https://api.contentstack.io/v3/assets',
+    url: hostUrl,
     headers: {
       api_key: apiKey,
       authorization: managementToken,
