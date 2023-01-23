@@ -6147,7 +6147,7 @@ function getInputs() {
     const filePath = core.getInput(inputs_1.Inputs.FilePath, {
         required: true
     });
-    const folderUid = core.getInput(inputs_1.Inputs.FolderUid);
+    const folderUid = core.getInput(inputs_1.Inputs.FolderUid) || null;
     const hostUrl = core.getInput(inputs_1.Inputs.HostUrl);
     const inputs = {
         managementToken,
