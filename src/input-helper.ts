@@ -14,7 +14,7 @@ export function getInputs() {
     required: true
   })
 
-  const folderUid = core.getInput(Inputs.FolderUid)
+  const folderUid = core.getInput(Inputs.FolderUid) || null
 
   const hostUrl = core.getInput(Inputs.HostUrl)
 

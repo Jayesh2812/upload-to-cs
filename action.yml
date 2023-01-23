@@ -16,7 +16,7 @@ inputs:
   folder_uid:
     description: 'Folder Uid under which file is to be uploaded in ContentStack Assets'
     required: false
-    default: null
+    default: ""
 
   host_url:
     description: 'Region based URL for where to upload the file'
