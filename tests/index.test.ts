@@ -11,7 +11,7 @@ jest.mock('../src/input-helper', () => ({
     apiKey: 'api_key',
     folderUid: 'folder_uid',
     filePath: path.join('./', 'jest.config.js'),
-    hostUrl: 'https://api.contentstack.io/v3/assts'
+    hostUrl: 'https://eu-api.contentstack.io/v3/assets'
   })
 }))
 

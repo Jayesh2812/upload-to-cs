@@ -20,7 +20,7 @@ export async function run(): Promise<void> {
     })
     if (link) core.setOutput('link', link)
     else if (error) {
-      core.debug(JSON.stringify(error))
+      core.debug(error)
       if (error?.response?.data?.error_message) {
         throw Error(error.response.data.error_message)
       }
@@ -40,7 +40,7 @@ async function postReport({
   var data = new FormData()
 
   data.append('asset[upload]', fs.createReadStream(filePath))
-  data.append('asset[parent_uid]', folderUid)
+  if (folderUid) data.append('asset[parent_uid]', folderUid)
 
   var config = {
     method: 'post',
@@ -55,7 +55,7 @@ async function postReport({
   }
   try {
     const response = await axios(config)
-    const { url } = response.data.asset
+    const { url } = response?.data?.asset
     return [url, null]
   } catch (error: any) {
     return [null, error]
