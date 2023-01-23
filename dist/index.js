@@ -6242,7 +6242,7 @@ function run() {
             if (link)
                 core.setOutput('link', link);
             else if (error) {
-                core.debug(JSON.stringify(error));
+                core.debug(error);
                 if ((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.error_message) {
                     throw Error(error.response.data.error_message);
                 }
@@ -6256,10 +6256,12 @@ function run() {
 }
 exports.run = run;
 function postReport({ managementToken, apiKey, folderUid, filePath, hostUrl }) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         var data = new form_data_1.default();
         data.append('asset[upload]', fs_1.default.createReadStream(filePath));
-        data.append('asset[parent_uid]', folderUid);
+        if (folderUid)
+            data.append('asset[parent_uid]', folderUid);
         var config = {
             method: 'post',
             url: hostUrl,
@@ -6268,7 +6270,7 @@ function postReport({ managementToken, apiKey, folderUid, filePath, hostUrl }) {
         };
         try {
             const response = yield (0, axios_1.default)(config);
-            const { url } = response.data.asset;
+            const { url } = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.asset;
             return [url, null];
         }
         catch (error) {
